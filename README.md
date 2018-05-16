@@ -2,7 +2,7 @@
 
 **Calendar Heatmap** | **Last updated: May 2018** | **Applicable data types: CSV or JSON** | **Author: [Hannah Friedrich]**
 
-![](img/cal.png)
+![](img/cal-01.png)
 
 This tutorial will walk through how to create a calendar heatmap of CSV data using D3. This calendar heatmap shows frequency of
 reported migrant deaths or missing people that have been reported since 2014.
