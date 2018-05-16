@@ -1,6 +1,6 @@
 # Missing Migrants Calendar Heatmap
 
-**Calendar Heatmap** | **Last updated: May 2018** | **Applicable data types: CSV or JSON** | **Author: [Hannah Friedrich]** )
+**Calendar Heatmap** | **Last updated: May 2018** | **Applicable data types: CSV or JSON** | **Author: [Hannah Friedrich]**
 
 ![](img/cal.png)
 
