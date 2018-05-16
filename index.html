@@ -198,10 +198,13 @@
         d3.select('#info')
             .text(function () {
                   var a = $( "title:contains('"+d+"')" ).text();
-                  //v = a.split(":")[1]
+                  d = (a.split(":")[0]).toString()
+                  c = (+a.split(":")[1]).toString()
+//                    if (c = NaN) {
+//                    c = 0
+//                    }
 
-
-                return 'Date: ' + (a.split(":")[0]).toString() + ' | value: ' + (+a.split(":")[1]).toString();
+                return 'Date: ' + d + ' | value: ' + c;
             });
 
     });
