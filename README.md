@@ -87,7 +87,8 @@ that involved migrant deaths or injuries that have been reported.
     </style>
 
 ### HTML
-At the beginning within the body tag is the HTML which contains the title, info tag which allows you
+At the beginning within the body tag is the HTML:
+
     <body>
         <div class = "title">
             <h1>Missing Migrants<br>Calendar Heatmap</h1>
