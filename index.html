@@ -1,10 +1,12 @@
+
 <!DOCTYPE html>
 <meta charset="utf-8">
 <style>
 
     body {
-        font: 10px sans-serif;
+        font: 12px sans-serif;
         shape-rendering: crispEdges;
+        width: 70%;
     }
 
     .day {
@@ -18,28 +20,100 @@
         stroke-width: 1px;
     }
 
-    .RdYlGn .q0-9{fill:rgb(255,255,204)}
-    .RdYlGn .q1-9{fill:rgb(255,237,160)}
-    .RdYlGn .q2-9{fill:rgb(254,217,118)}
-    .RdYlGn .q3-9{fill:rgb(254,178,76)}
-    .RdYlGn .q4-9{fill:rgb(253,141,60)}
-    .RdYlGn .q5-9{fill:rgb(252,78,42)}
-    .RdYlGn .q6-9{fill:rgb(227,26,28)}
-    .RdYlGn .q7-9{fill:rgb(189,0,38)}
-    .RdYlGn .q8-9{fill:rgb(128,0,38)}
+    #info, text, p {
+        font-family: 'Josefin Sans', sans-serif;
+    }
+
+    .container {
+        color: grey;
+        text-align: right;
+        position: absolute;
+        right: 20px;
+        /*left: -15px;*/
+        /*top: -40px;*/
+        padding-top: 120px;
+        padding-left: 80px;
+        width: 20%;
+        height: 20%;
+    }
+
+    #info {
+        color: grey;
+        text-align: right;
+        position: absolute;
+        right: 20px;
+        /*left: -15px;*/
+        /*top: -40px;*/
+        padding-top: 80px;
+        padding-left: 80px;
+        width: 20%;
+        height: 20%;
+    }
+    .title {
+        text-align: right;
+        position: absolute;
+        right: 20px;
+        padding-top: 10px;
+        padding-left: 80px;
+        width: 20%;
+        height: 20%;
+    }
+
+    a{
+        color: green;
+    }
+
+    h1{
+        font-family: 'Josefin Sans', sans-serif;
+    }
+    /*text {*/
+        /*font-family: 'Josefin Sans', sans-serif;*/
+    /*}*/
+    /**/
+    /*p {*/
+        /**/
+    /*}*/
+
+
+    .RdYlGn .q0-5{fill:rgb(220, 219, 219)}
+    .RdYlGn .q1-5{fill:rgb(232, 203, 139)}
+    .RdYlGn .q2-5{fill:rgb(243, 187, 59)}
+    .RdYlGn .q3-5{fill:rgb(232, 128, 32)}
+    .RdYlGn .q4-5{fill:rgb(220, 68, 4)}
+    /*.RdYlGn .q5-9{fill:rgb(252,78,42)}*/
+    /*.RdYlGn .q6-9{fill:rgb(227,26,28)}*/
+    /*.RdYlGn .q7-9{fill:rgb(189,0,38)}*/
+    /*.RdYlGn .q8-9{fill:rgb(128,0,38)}*/
     /*.RdYlGn .q9-11{fill:rgb(26,152,80)}*/
     /*.RdYlGn .q10-11{fill:rgb(0,104,55)}*/
 
 </style>
 <body>
-
-<article>
+    <div class = "title">
+        <h1>Missing Migrants<br>Calendar Heatmap</h1>
+    </div>
     <header>
-        <span id="info">info</span>
+        <span id="info">Mouse over the calendar to see the date and count of total reported migrant deaths and missing peoples.</span>
     </header>
-    <section id="body"></section>
-</article>
 
+    <div class="container">
+        <div class="row top-buffer">
+            <div class="col-xs-4">
+                <p>This calendar heatmap shows the daily frequency of reported global migrant deaths or missing migrants from the <a href="http://missingmigrants.iom.int/" target="_blank"> Missing Migrant database</a>. The Missing
+                Migrant database has been recording instances of reported deaths or missing peoples reports since 2014. </p>
+            </div>
+        </div>
+        <div class="row top-buffer">
+        <div class="col-xs-4">
+            <p>This calendar heatmap is built on D3 using calendar heatmap, which is inspired by Mike Bostock. This geovisualization was created by <a href="https://github.com/hannahfriedrich/MissingMigrantDateHeatmap" target="_blank"> Hannah Friedrich</a>.</p>
+        </div>
+        </div>
+    </div>
+
+    <section id="body"></section>
+
+
+<link href="https://fonts.googleapis.com/css?family=Josefin+Sans" rel="stylesheet">
 <script src="https://d3js.org/d3.v4.min.js"></script>
 <script>
 
@@ -52,7 +126,7 @@
 
     var color = d3.scaleQuantize()
         .domain([0, 5])
-        .range(d3.range(9).map(function(d) { return "q" + d + "-9"; }));
+        .range(d3.range(5).map(function(d) { return "q" + d + "-5"; }));
 
     var svg = d3.select("body").selectAll("svg")
         .data(d3.range(2014, 2019))
@@ -61,14 +135,7 @@
         .attr("height", height)
         .attr("class", "RdYlGn")
         .append("g")
-        .attr("transform", "translate(" + ((width - cellSize * 53) / 2) + "," + (height - cellSize * 7 - 1) + ")")
-        .on('_hover', function (d, i) {
-            //var f = d3.time.format("%Y-%m-%d");
-            d3.select('#info')
-                .text(function () {
-                    return 'date: ' + d.Date + ' | value: ' + d.Count;
-                });
-        });
+        .attr("transform", "translate(" + ((width - cellSize * 53) / 2) + "," + (height - cellSize * 7 - 1) + ")");
 
     svg.append("text")
         .attr("transform", "translate(-6," + cellSize * 3.5 + ")rotate(-90)")
@@ -83,7 +150,21 @@
         .attr("height", cellSize)
         .attr("x", function(d) { return d3.timeWeek.count(d3.timeYear(d), d) * cellSize; })
         .attr("y", function(d) { return d.getDay() * cellSize; })
-        .datum(format);
+        .datum(format)
+        .on('mouseover', function (d, i) {
+//            var f = d3.time.format("%Y-%m-%d");
+//            d3.select('#info')
+//                .text(function () {
+//                    return 'date: ' + d.Date + ' | value: ' + d.Count;
+//                });
+
+
+            d3.select('#info')
+                .text(function () {
+                    return  'Date: ' + d.toString() + ' | value: ';
+                });
+
+        });
 
     rect.append("title")
         .text(function(d) { return d; });
@@ -105,10 +186,11 @@
 
         console.log('data', data);
 
+
         rect.filter(function(d) { return data.has(d); })
             .attr("class", function(d) { return "day " + color(data.get(d)); })
             .select("title")
-            .text(function(d) { return d + ": " + percent(data.get(d)); });
+            .text(function(d) { return d + ": " + data.get(d); });
     });
 
     function monthPath(t0) {
@@ -121,5 +203,19 @@
             + "H" + (w1 + 1) * cellSize + "V" + 0
             + "H" + (w0 + 1) * cellSize + "Z";
     }
+    rect.on('mouseover', function (d, i) {
+//            var f = d3.time.format("%Y-%m-%d");
+//            d3.select('#info')
+//                .text(function () {
+//                    return 'date: ' + d.Date + ' | value: ' + d.Count;
+//                });
+
+
+        d3.select('#info')
+            .text(function () {
+                return  'Date: ' + d.toString() + ' | value: ';
+            });
+
+    });
 
 </script>
