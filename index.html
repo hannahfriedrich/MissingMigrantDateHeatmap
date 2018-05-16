@@ -101,17 +101,20 @@
 
     <script>
 
+    //define size of graphic: width, height, and cellSize
     var width = 960,
         height = 136,
         cellSize = 17; // cell size
 
-    var percent = d3.format(".1%"),
-        format = d3.timeFormat("%Y-%m-%d");
+    //define variable called format which define the d3.timeFormat
+    var format = d3.timeFormat("%Y-%m-%d");
 
+    //define variable called color which scales the colors defined above
     var color = d3.scaleQuantize()
-        .domain([0, 5])
-        .range(d3.range(5).map(function(d) { return "q" + d + "-5"; }));
+        .domain([0, 5]) //sets the "range" of values
+        .range(d3.range(5).map(function(d) { return "q" + d + "-5"; })); //this maps the colors on to the data
 
+    //this creates the calendar cell graphic
     var svg = d3.select("body").selectAll("svg")
         .data(d3.range(2014, 2019))
         .enter().append("svg")
@@ -126,6 +129,7 @@
         .style("text-anchor", "middle")
         .text(function(d) { return d; });
 
+    //this creates the graphic for days
     var rect = svg.selectAll(".day")
         .data(function(d) { return d3.timeDays(new Date(d, 0, 1), new Date(d + 1, 0, 1)); })
         .enter().append("rect")
@@ -134,34 +138,24 @@
         .attr("height", cellSize)
         .attr("x", function(d) { return d3.timeWeek.count(d3.timeYear(d), d) * cellSize; })
         .attr("y", function(d) { return d.getDay() * cellSize; })
-        .datum(format)
-        .on('mouseover', function (d, i) {
-//            var f = d3.time.format("%Y-%m-%d");
-//            d3.select('#info')
-//                .text(function () {
-//                    return 'date: ' + d.Date + ' | value: ' + d.Count;
-//                });
+        .datum(format);
 
-
-            d3.select('#info')
-                .text(function () {
-                    return  'Date: ' + d.toString() + ' | value: ';
-                });
-
-        });
 
     rect.append("title")
         .text(function(d) { return d; });
 
+    //this creates the graphic for days
     svg.selectAll(".month")
         .data(function(d) { return d3.timeMonths(new Date(d, 0, 1), new Date(d + 1, 0, 1)); })
         .enter().append("path")
         .attr("class", "month")
         .attr("d", monthPath);
 
+    //load in csv data
     d3.csv("migrants_updated.csv", function(error, csv) {
         if (error) throw error;
 
+        //nest data, obtain date and count data columns
         var data = d3.nest()
             .key(function(d) { return d.Date.substring(0,4) + "-" + d.Date.substring(4,6) + "-" + d.Date.substring(6,8); })
             //d.Date.substring(0,4) + "-" + d.Date.substring(4,6) + "-" + d.Date.substring(6,8)
@@ -170,13 +164,14 @@
 
         console.log('data', data);
 
-
+        //give data to rect variable
         rect.filter(function(d) { return data.has(d); })
             .attr("class", function(d) { return "day " + color(data.get(d)); })
             .select("title")
             .text(function(d) { return d + ": " + data.get(d); });
     });
 
+    //monthPath function
     function monthPath(t0) {
         var t1 = new Date(t0.getFullYear(), t0.getMonth() + 1, 0),
             d0 = t0.getDay(), w0 = d3.timeWeek.count(d3.timeYear(t0), t0)
@@ -187,22 +182,15 @@
             + "H" + (w1 + 1) * cellSize + "V" + 0
             + "H" + (w0 + 1) * cellSize + "Z";
     }
+
+    //populate info header with date and count values
     rect.on('mouseover', function (d, i) {
-//            var f = d3.time.format("%Y-%m-%d");
-//            d3.select('#info')
-//                .text(function () {
-//                    return 'date: ' + d.Date + ' | value: ' + d.Count;
-//                });
-
-
         d3.select('#info')
             .text(function () {
                   var a = $( "title:contains('"+d+"')" ).text();
                   d = (a.split(":")[0]).toString()
                   c = (+a.split(":")[1]).toString()
-//                    if (c = NaN) {
-//                    c = 0
-//                    }
+                //if (c = "NaN") {c = 0}
 
                 return 'Date: ' + d + ' | value: ' + c;
             });

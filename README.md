@@ -7,6 +7,7 @@ This tutorial will walk through how to create a calendar heatmap of CSV data usi
 reported migrant deaths or missing people that have been reported since 2014.
 
 ## 1\. Set up the workspace
+Set up workspace by getting csv with cleaned up columns of date and count. Include appropriate CDNs in header. See below.
 
 ## 2\. Data Sources
 The data source used for this geovisualization is the [Missing Migrants] database. The database contains dates of events
@@ -111,9 +112,112 @@ At the beginning within the body tag is the HTML which contains the title, info 
 
         <section id="body"></section>
 
+### CDNs
+    <link href="https://fonts.googleapis.com/css?family=Josefin+Sans" rel="stylesheet">
+    <script src="https://d3js.org/d3.v4.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
 
 ### Javascript
 
+        <script>
+
+        //define size of graphic: width, height, and cellSize
+        var width = 960,
+            height = 136,
+            cellSize = 17; // cell size
+
+        //define variable called format which define the d3.timeFormat
+        var format = d3.timeFormat("%Y-%m-%d");
+
+        //define variable called color which scales the colors defined above
+        var color = d3.scaleQuantize()
+            .domain([0, 5]) //sets the "range" of values
+            .range(d3.range(5).map(function(d) { return "q" + d + "-5"; })); //this maps the colors on to the data
+
+        //this creates the calendar cell graphic
+        var svg = d3.select("body").selectAll("svg")
+            .data(d3.range(2014, 2019))
+            .enter().append("svg")
+            .attr("width", width)
+            .attr("height", height)
+            .attr("class", "RdYlGn")
+            .append("g")
+            .attr("transform", "translate(" + ((width - cellSize * 53) / 2) + "," + (height - cellSize * 7 - 1) + ")");
+
+        svg.append("text")
+            .attr("transform", "translate(-6," + cellSize * 3.5 + ")rotate(-90)")
+            .style("text-anchor", "middle")
+            .text(function(d) { return d; });
+
+        //this creates the graphic for days
+        var rect = svg.selectAll(".day")
+            .data(function(d) { return d3.timeDays(new Date(d, 0, 1), new Date(d + 1, 0, 1)); })
+            .enter().append("rect")
+            .attr("class", "day")
+            .attr("width", cellSize)
+            .attr("height", cellSize)
+            .attr("x", function(d) { return d3.timeWeek.count(d3.timeYear(d), d) * cellSize; })
+            .attr("y", function(d) { return d.getDay() * cellSize; })
+            .datum(format);
+
+
+        rect.append("title")
+            .text(function(d) { return d; });
+
+        //this creates the graphic for days
+        svg.selectAll(".month")
+            .data(function(d) { return d3.timeMonths(new Date(d, 0, 1), new Date(d + 1, 0, 1)); })
+            .enter().append("path")
+            .attr("class", "month")
+            .attr("d", monthPath);
+
+        //load in csv data
+        d3.csv("migrants_updated.csv", function(error, csv) {
+            if (error) throw error;
+
+            //nest data, obtain date and count data columns
+            var data = d3.nest()
+                .key(function(d) { return d.Date.substring(0,4) + "-" + d.Date.substring(4,6) + "-" + d.Date.substring(6,8); })
+                //d.Date.substring(0,4) + "-" + d.Date.substring(4,6) + "-" + d.Date.substring(6,8)
+                .rollup(function(d) { return (+d[0].Count); })
+                .map(csv);
+
+            console.log('data', data);
+
+            //give data to rect variable
+            rect.filter(function(d) { return data.has(d); })
+                .attr("class", function(d) { return "day " + color(data.get(d)); })
+                .select("title")
+                .text(function(d) { return d + ": " + data.get(d); });
+        });
+
+        //monthPath function
+        function monthPath(t0) {
+            var t1 = new Date(t0.getFullYear(), t0.getMonth() + 1, 0),
+                d0 = t0.getDay(), w0 = d3.timeWeek.count(d3.timeYear(t0), t0)
+            d1 = t1.getDay(), w1 = d3.timeWeek.count(d3.timeYear(t1), t1);
+            return "M" + (w0 + 1) * cellSize + "," + d0 * cellSize
+                + "H" + w0 * cellSize + "V" + 7 * cellSize
+                + "H" + w1 * cellSize + "V" + (d1 + 1) * cellSize
+                + "H" + (w1 + 1) * cellSize + "V" + 0
+                + "H" + (w0 + 1) * cellSize + "Z";
+        }
+
+        //populate info header with date and count values
+        rect.on('mouseover', function (d, i) {
+            d3.select('#info')
+                .text(function () {
+                      var a = $( "title:contains('"+d+"')" ).text();
+                      d = (a.split(":")[0]).toString()
+                      c = (+a.split(":")[1]).toString()
+                    //if (c = "NaN") {c = 0}
+
+                    return 'Date: ' + d + ' | value: ' + c;
+                });
+
+        });
+
+    </script>
 
 ## 4\. More examples of similiar geovisualizations
 [Resuable Calendar Heatmap] allows the user to hover over individual cells which update the header information with
@@ -123,7 +227,7 @@ the cell value and date
 [Alternative Calendar View] is a heatmap
 
 ## Acknowledgement
-Thanks to Bo Zhao for helping me debug displaying the value in the mouse over function.
+Thanks to Bo Zhao for helping me debug displaying the value in the mouse over function. Ahh!
 
 ## References
 This tutorial is based on the calander heatmap examples created by [Micah Stubbs] and [Mike Bostock], which were made
