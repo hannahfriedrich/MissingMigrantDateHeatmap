@@ -3,7 +3,6 @@
 **Calendar Heatmap** | **Last updated: May 2018** | **Applicable data types: CSV or JSON** | **Author: [Hannah Friedrich]**
 
 ![](img/cal-01.png)
-
 This tutorial will walk through how to create a calendar heatmap of CSV data using D3. This calendar heatmap shows frequency of
 reported migrant deaths or missing people that have been reported since 2014.
 
@@ -87,7 +86,34 @@ that involved migrant deaths or injuries that have been reported.
     </style>
 
 ### HTML
+At the beginning within the body tag is the HTML which contains the title, info tag which allows you
+    <body>
+        <div class = "title">
+            <h1>Missing Migrants<br>Calendar Heatmap</h1>
+        </div>
+        <header>
+            <span id="info">Mouse over the calendar to see the date and count of total reported migrant deaths and missing peoples.</span>
+        </header>
+
+        <div class="container">
+            <div class="row top-buffer">
+                <div class="col-xs-4">
+                    <p>This calendar heatmap shows the daily frequency of reported global migrant deaths or missing migrants from the <a href="http://missingmigrants.iom.int/" target="_blank"> Missing Migrant database</a>. The Missing
+                    Migrant database has been recording instances of reported deaths or missing peoples reports since 2014. </p>
+                </div>
+            </div>
+            <div class="row top-buffer">
+            <div class="col-xs-4">
+                <p>This calendar heatmap is built on D3 using calendar heatmap, which is inspired by Mike Bostock. This geovisualization was created by <a href="https://github.com/hannahfriedrich/MissingMigrantDateHeatmap" target="_blank"> Hannah Friedrich</a>.</p>
+            </div>
+            </div>
+        </div>
+
+        <section id="body"></section>
+
+
 ### Javascript
+
 
 ## 4\. More examples of similiar geovisualizations
 [Resuable Calendar Heatmap] allows the user to hover over individual cells which update the header information with

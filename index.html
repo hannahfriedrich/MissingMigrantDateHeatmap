@@ -97,7 +97,9 @@
 
 <link href="https://fonts.googleapis.com/css?family=Josefin+Sans" rel="stylesheet">
 <script src="https://d3js.org/d3.v4.min.js"></script>
-<script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+
+    <script>
 
     var width = 960,
         height = 136,
@@ -195,7 +197,11 @@
 
         d3.select('#info')
             .text(function () {
-                return  'Date: ' + d.toString() + ' | value: ';
+                  var a = $( "title:contains('"+d+"')" ).text();
+                  //v = a.split(":")[1]
+
+
+                return 'Date: ' + (a.split(":")[0]).toString() + ' | value: ' + (+a.split(":")[1]).toString();
             });
 
     });
