@@ -86,9 +86,8 @@ that involved migrant deaths or injuries that have been reported.
 
     </style>
 
-- html
-- javascript
-- css
+### HTML
+### Javascript
 
 ## 4\. More examples of similiar geovisualizations
 [Resuable Calendar Heatmap] allows the user to hover over individual cells which update the header information with
