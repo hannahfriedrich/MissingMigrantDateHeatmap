@@ -15,8 +15,8 @@ that involved migrant deaths or injuries that have been reported.
 
 ## 3\. A function-by-function Tutorial
 ### CSS
-'''
-<style>
+
+    <style>
 
     body {
         font: 12px sans-serif;
@@ -84,8 +84,7 @@ that involved migrant deaths or injuries that have been reported.
     .RdYlGn .q3-5{fill:rgb(232, 128, 32)}
     .RdYlGn .q4-5{fill:rgb(220, 68, 4)}
 
-</style>
-'''
+    </style>
 
 - html
 - javascript
